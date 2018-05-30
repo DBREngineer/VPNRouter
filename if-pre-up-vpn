@@ -1,0 +1,22 @@
+#!/bin/bash
+echo 1 > /proc/sys/net/ipv4/ip_forward
+
+NETMAP_ACT=0
+for NETMAP in `cd /etc/openvpn/; ls *.netmap 2> /dev/null`; do
+        source /etc/openvpn/$NETMAP
+	NETMAP_ACT=1
+done
+export
+#source /etc/openvpn/vars.netmap
+
+if [ $NETMAP_ACT -gt 0 ]; then
+	/sbin/iptables -t nat -A PREROUTING -d $NETMAP_VIRT -i tun0 -j NETMAP --to $NETMAP_REAL
+	/sbin/iptables -t nat -A POSTROUTING -s $NETMAP_REAL -o tun0 -j NETMAP --to $NETMAP_VIRT
+fi
+
+
+
+
+
+
+
