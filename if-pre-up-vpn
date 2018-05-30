@@ -1,6 +1,13 @@
 #!/bin/bash
 echo 1 > /proc/sys/net/ipv4/ip_forward
 
+#enable gateway functionality
+source /root/vpn_router/vars.gateway
+
+
+
+
+# enable netmapping of the physical local network to a virtual network seen by other vpn clients
 NETMAP_ACT=0
 for NETMAP in `cd /etc/openvpn/; ls *.netmap 2> /dev/null`; do
         source /etc/openvpn/$NETMAP

@@ -1,0 +1,59 @@
+#!/bin/bash
+PROGNAME=test
+VERSION=0.0
+DEBUG=0
+
+die()
+{
+    local m="$1"
+
+    echo "$m" >&2
+    exit 1
+}
+
+usage()
+{
+    cat <<EOM
+$PROGNAME $VERSION
+Usage: $PROGNAME [options...] [common-name]
+
+Options:
+  --wan         : wan interface
+  --lan         : lan interface
+  --gwONOFF     : enabled gateway
+EOM
+}
+
+
+
+while [ $# -gt 0 ]; do
+    case "$1" in
+        --wan) WAN_ITF=$2
+                     shift;;
+
+        --lan) LAN_ITF=$2
+                     shift;;
+
+	--GWONOFF) ENABLE_GW=$2
+                     shift;;
+
+        --help|--usage)
+                    usage
+                    exit ;;
+        --version)
+                    echo "$PROGNAME $VERSION"
+                    exit ;;
+        # errors
+        --*        ) die "$PROGNAME: unknown option: $1" ;;
+        *          ) break ;;
+
+    esac
+    shift
+done
+
+echo "Configuring with"
+echo "WAN: $WAN_ITF"
+echo "LAN: $LAN_ITF"
+echo "GW: $ENABLE_GW"
+CONFIG_FILE=/root/vpn_router/vars.gateway
+echo 
